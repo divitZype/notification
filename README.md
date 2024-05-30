@@ -1,15 +1,17 @@
 # notification
-need to do a POC on migrating from  firebase legacy to HTTP v1
+## need to do a POC on migrating from  firebase legacy to HTTP v1
 
-Frontend Flow
+# Frontend Flow
 You will need to create firebase project and add ios and android apps to it 
 
 set up fire base in your react native project 
 
+```bash
 npm i @react-native-firebase/app
 npm i @react-native-firebase/messaging
+```
 
-after install install it in ios using command pod install
+### after install install it in ios using command pod install
 
 add google-services.json in build/app of android in react native
 similarly add GoogleService-info.plist in xcode under main project
