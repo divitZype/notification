@@ -1,5 +1,5 @@
 //4/0AdLIrYddifbQdlw1c4nFZgFJvj-KItKRVYvu9Wx5yKIqCTkczDEX0KB_ybszqbLaML1T7g
-
+// "c7Li585ERyiCd4UWcQoW-b:APA91bHoPVER2tZdFzwvBvfNIzV09wv-eAC0s24Nex5pM6lfoDXsgBQWEbDcYbIX5x2Y_1fia7JUpiqDC9hQtv0TlYhioM4WGcD66LSbKb9C9Fn3FZBqi6fW6OsBBA0vIb3ErjzE8Qwx",
 //access token : ya29.a0AXooCgv6nEV0lBTyl-Wp_-Pk_Qcqb0n3cTvDR9Jrav0NYWK9C_s9kIeAHEwPm4FP8P6hDwcXVOqOw3H3AlpFKjDXf2WSeKrfLoSjFSntTgMALzALAKI0NODaH_gEzRYi2mLw3dX5GcXu189tGUuU5TUYIACDNj0xpaRCaCgYKAZASARASFQHGX2MiGjoUCfsLv62xRcbgwNiCOg0171
 // refresh acces token : 1//04EkVM7cgziWBCgYIARAAGAQSNwF-L9IrQEtDHqQo-SiIEBgXy9WNHPqS0cEtqrBQ9Vt3y8rGTatr66hKHHgf4QQjiBE5AAbhal0
 
@@ -47,8 +47,7 @@ const server = http.createServer(async (req, res) => {
           channel_id: "channel_id_foreground",
         },
       },
-      token:
-        "c7Li585ERyiCd4UWcQoW-b:APA91bHoPVER2tZdFzwvBvfNIzV09wv-eAC0s24Nex5pM6lfoDXsgBQWEbDcYbIX5x2Y_1fia7JUpiqDC9hQtv0TlYhioM4WGcD66LSbKb9C9Fn3FZBqi6fW6OsBBA0vIb3ErjzE8Qwx",
+      token: "fcm token",
     };
     res.statusCode = 200;
     getMessaging()
