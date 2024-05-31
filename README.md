@@ -16,8 +16,12 @@ npm i @react-native-firebase/messaging
 add google-services.json in build/app of android in react native
 similarly add GoogleService-info.plist in xcode under main project
 
-add classpath 'com.google.gms:google-services:4.4.1'  in depency list in android/build.gradle
-add apply plugin: 'com.google.gms.google-services' in android/app/build.gradle
+add 
+```classpath 'com.google.gms:google-services:4.4.1'  ```
+in depency list in android/build.gradle
+add 
+```apply plugin: 'com.google.gms.google-services'``` 
+in android/app/build.gradle
 
 add below lines in AppDelegate.mm
 ``` bash
@@ -54,26 +58,27 @@ add below lines in AppDelegate.mm
 @end
 ```
 
-In App.tsx generate a fcm token for the device
+### In App.tsx generate a fcm token for the device
 
+```
 import messaging from '@react-native-firebase/messaging';
  const fcmToken = await messaging().getToken();
   //store this token in your device an also send it to backend via an API
 
 
- for android ask user for permission in App.tsx
+// for android ask user for permission in App.tsx
  import {PermissionsAndroid} from 'react-native';
  PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
       );
 
-for ios ask user for permission in App.tsx
+//for ios ask user for permission in App.tsx
 const authStatus = await messaging().requestPermission();
       const enabled =
         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-
+```
 Backend Flow
 
 npm i firebase
