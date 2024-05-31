@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "993510484015",
+    "project_id": "my-zype",
+    "storage_bucket": "my-zype.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993510484015:android:e711f1f8ba5d4b4a287eda",
+        "android_client_info": {
+          "package_name": "com.apcheckfirebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxRPwqeSBdHFkzsshrb9l8kLJG8Ve-e7I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993510484015:android:6164b48d202f391f287eda",
+        "android_client_info": {
+          "package_name": "com.firebasenotification"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxRPwqeSBdHFkzsshrb9l8kLJG8Ve-e7I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
