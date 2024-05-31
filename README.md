@@ -60,7 +60,7 @@ add below lines in AppDelegate.mm
 
 ### In App.tsx generate a fcm token for the device
 
-```
+``` bash 
 import messaging from '@react-native-firebase/messaging';
  const fcmToken = await messaging().getToken();
   //store this token in your device an also send it to backend via an API
@@ -79,24 +79,27 @@ const authStatus = await messaging().requestPermission();
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
 ```
-Backend Flow
+# Backend Flow
 
+```bash
 npm i firebase
 
 npm i firebase-admin
+```
 
 
-create a service-file.json from project setting in firebase and paste it in your backend server
+## create a service-file.json from project setting in firebase and paste it in your backend server
 
-initialize firebase in backend
+#### initialize firebase in backend
 
+```bash
 import { initializeApp } from "firebase-admin/app";
 const firebaseApp = initializeApp({
   credential: admin.credential.cert("service-file.json"),
 });
 
 
-sending a notification from backend 
+// sending a notification from backend 
 
 import { getMessaging } from "firebase-admin/messaging";
 const message = {
@@ -126,12 +129,13 @@ const message = {
       .catch((error) => {
         console.log("Error sending message:", error);
       });
+```
+#### Now as per the document given by firebase the latest version of firebase-admin (Firebase Admin SDK) uses HTTP v1 (https://firebase.google.com/docs/cloud-messaging/migrate-v1)
+#### It also refreshed the bearer token automaticlly once it is expired
 
-Now as per the document given by firebase the latest version of firebase-admin (Firebase Admin SDK) uses HTTP v1 (https://firebase.google.com/docs/cloud-messaging/migrate-v1)
-It also refreshed the bearer token automaticlly once it is expired
+## below is the curl if you want to send notification using a API 
 
-below is the curl if you want to send notification using a API 
-
+```bash
 curl --location 'https://fcm.googleapis.com/v1/projects/my-zype/messages:send' \
 --header 'Authorization: Bearer your-google-account-token' \
 --header 'Content-Type: application/json' \
@@ -152,9 +156,11 @@ curl --location 'https://fcm.googleapis.com/v1/projects/my-zype/messages:send' \
       },
    "token":"c7Li585ERyiCd4UWcQoW-b:APA91bHoPVER2tZdFzwvBvfNIzV09wv-eAC0s24Nex5pM6lfoDXsgBQWEbDcYbIX5x2Y_1fia7JUpiqDC9hQtv0TlYhioM4WGcD66LSbKb9C9Fn3FZBqi6fW6OsBBA0vIb3ErjzE8Qwx"
 }}'
+```
 
-You need to generate your bearer token from here using google account 
-Steps to get Authentication Bearer:
+### You need to generate your bearer token from here using google account 
+
+## Steps to get Authentication Bearer:
 
 Got to Google OAuth Playground: https://developers.google.com/oauthplayground
 In the "Input your own scopes" for FCM use this url: https://www.googleapis.com/auth/firebase.messaging
