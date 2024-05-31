@@ -1,58 +1,171 @@
-To effectively debug your React Native application, follow these steps to integrate and use React Native Debugger:
+# notification
+## need to do a POC on migrating from  firebase legacy to HTTP v1
 
-## 1. Download React Native Debugger
+# Frontend Flow
+You will need to create firebase project and add ios and android apps to it 
 
-- Visit the [React Native Debugger releases page](https://github.com/jhen0409/react-native-debugger/releases).
-- Download the appropriate version of the debugger based on your operating system (Windows, macOS, or Linux).
+set up fire base in your react native project 
 
-## 2. Install and Open React Native Debugger
+```bash
+npm i @react-native-firebase/app
+npm i @react-native-firebase/messaging
+```
 
-- After downloading, install React Native Debugger by following the installation instructions specific to your operating system.
-- Open React Native Debugger once the installation is complete.
+### after install install it in ios using command pod install
 
-## 3. Set Up Your React Native App
+add google-services.json in build/app of android in react native
+similarly add GoogleService-info.plist in xcode under main project
 
-- Ensure your React Native application is running either on a physical device or an emulator.
+add 
+```classpath 'com.google.gms:google-services:4.4.1'  ```
+in depency list in android/build.gradle
+add 
+```apply plugin: 'com.google.gms.google-services'``` 
+in android/app/build.gradle
 
-## 4. Set Up ADB Reverse (for Android)
+add below lines in AppDelegate.mm
+``` bash
+#import "AppDelegate.h"
+#import <Firebase.h> // Add this line
+#import <React/RCTBundleURLProvider.h>
 
-- Open your terminal and run the following command to set up port forwarding between your device/emulator and your development machine:
+@implementation AppDelegate
 
-  ```sh
-  adb reverse tcp:8081 tcp:8081
-  ```
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+  self.moduleName = @"FirebaseNotification";
+  // You can add your custom initial props in the dictionary below.
+  // They will be passed down to the ViewController used by React Native.
+  self.initialProps = @{};
+  [FIRApp configure]; // Add this line
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
 
-- This command ensures that your app can communicate with the development server.
+- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
+{
+  return [self bundleURL];
+}
 
-## 5. Open Debugging Options Modal
+- (NSURL *)bundleURL
+{
+#if DEBUG
+  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
+#else
+  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+#endif
+}
 
-- For a physical device, shake the device.
-- For an Android emulator on macOS, press `cmd + m`.
-- For an iOS simulator on macOS, press `cmd + d`.
-- For an Android emulator on Windows or Linux, press `ctrl + m`.
+@end
+```
 
-  This action will open the debugging options modal.
+### In App.tsx generate a fcm token for the device
 
-## 6. Enable Remote Debugging
+``` bash 
+import messaging from '@react-native-firebase/messaging';
+ const fcmToken = await messaging().getToken();
+  //store this token in your device an also send it to backend via an API
 
-- In the debugging options modal, select **Debug JS Remotely**.
-- This will open a new tab in your default browser (debugger-ui). Close this tab.
-- Manually open React Native Debugger to connect it with your application.
 
-## 7. Verify the Connection
+// for android ask user for permission in App.tsx
+ import {PermissionsAndroid} from 'react-native';
+ PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      );
 
-- In React Native Debugger, you should see the logs and debugging interface for your application, indicating that the connection is successful.
+//for ios ask user for permission in App.tsx
+const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-## 8. Check API Requests
+```
+# Backend Flow
 
-- Right-click on the left part of the screen and click **Enable Network Inspect**.
+```bash
+npm i firebase
 
-## 9. Adding Breakpoints
+npm i firebase-admin
+```
 
-- Navigate to the **Sources** section in React Native Debugger.
-- Click on **Add Workspace**. This is a one-time setup process.
-- Select your project folder and add it to the workspace.
 
-## Summary
+## create a service-file.json from project setting in firebase and paste it in your backend server
 
-By following these steps, you can seamlessly integrate React Native Debugger with your React Native application, providing a powerful toolset for debugging and improving your development workflow.
+#### initialize firebase in backend
+
+```bash
+import { initializeApp } from "firebase-admin/app";
+const firebaseApp = initializeApp({
+  credential: admin.credential.cert("service-file.json"),
+});
+
+
+// sending a notification from backend 
+
+import { getMessaging } from "firebase-admin/messaging";
+const message = {
+      data: {},
+      notification: {
+        title: "Basic Notification",
+        body: "This is a basic notification sent from the server!",
+        image:
+          "https://www.kasandbox.org/programming-images/avatars/leaf-blue.png",
+      },
+      android: {
+        priority: "high",
+        notification: {
+          channel_id: "channel_id_foreground",
+        },
+      },
+      token:
+        "cpdYnpKeTWSDDtZRjASu-U:APA91bFJIPPFK5sp1CVX-hoCfXNYIKUfq4ajRdGD-J3ZGvP6ujkHb-w75tI8JE0g0R-o0vT2qf6uG1wO36ROAS4K1xj8eCgajB3we7VpSmWi30duXVhusfs_1oxeTfr6zeUNV5YzoNVP",
+    };
+
+   getMessaging()
+      .send(message)
+      .then((response) => {
+        // Response is a message ID string.
+        console.log("Successfully sent message:", response);
+      })
+      .catch((error) => {
+        console.log("Error sending message:", error);
+      });
+```
+#### Now as per the document given by firebase the latest version of firebase-admin (Firebase Admin SDK) uses HTTP v1 (https://firebase.google.com/docs/cloud-messaging/migrate-v1)
+#### It also refreshed the bearer token automaticlly once it is expired
+
+## below is the curl if you want to send notification using a API 
+
+```bash
+curl --location 'https://fcm.googleapis.com/v1/projects/my-zype/messages:send' \
+--header 'Authorization: Bearer your-google-account-token' \
+--header 'Content-Type: application/json' \
+--data '{
+"message":{
+   "data":{},
+   "notification": {
+    "title": "Basic Notification",
+    "body": "This is a basic notification sent from the server!",
+    "image":"https://www.kasandbox.org/programming-images/avatars/leaf-blue.png"
+    
+  },
+   "android": {
+        "priority": "high",
+        "notification": {
+          "channel_id": "channel_id_foreground"
+        }
+      },
+   "token":"c7Li585ERyiCd4UWcQoW-b:APA91bHoPVER2tZdFzwvBvfNIzV09wv-eAC0s24Nex5pM6lfoDXsgBQWEbDcYbIX5x2Y_1fia7JUpiqDC9hQtv0TlYhioM4WGcD66LSbKb9C9Fn3FZBqi6fW6OsBBA0vIb3ErjzE8Qwx"
+}}'
+```
+
+### You need to generate your bearer token from here using google account 
+
+### Steps to Get Authentication Bearer:
+
+1. Go to [Google OAuth Playground](https://developers.google.com/oauthplayground).
+2. In the "Input your own scopes" field for FCM, use this URL: `https://www.googleapis.com/auth/firebase.messaging`.
+3. Tap **Authorize APIs**.
+4. Pick the correct user for authorization and allow access.
+5. In Step 2: Exchange authorization code for tokens, tap **Exchange authorization code for tokens**.
+6. The access token you receive is your Bearer.
+
