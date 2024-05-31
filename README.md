@@ -20,7 +20,7 @@ add classpath 'com.google.gms:google-services:4.4.1'  in depency list in android
 add apply plugin: 'com.google.gms.google-services' in android/app/build.gradle
 
 add below lines in AppDelegate.mm
-
+``` bash
 #import "AppDelegate.h"
 #import <Firebase.h> // Add this line
 #import <React/RCTBundleURLProvider.h>
@@ -52,6 +52,7 @@ add below lines in AppDelegate.mm
 }
 
 @end
+```
 
 In App.tsx generate a fcm token for the device
 
