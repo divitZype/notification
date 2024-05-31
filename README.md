@@ -160,12 +160,12 @@ curl --location 'https://fcm.googleapis.com/v1/projects/my-zype/messages:send' \
 
 ### You need to generate your bearer token from here using google account 
 
-## Steps to get Authentication Bearer:
+### Steps to Get Authentication Bearer:
 
-Got to Google OAuth Playground: https://developers.google.com/oauthplayground
-In the "Input your own scopes" for FCM use this url: https://www.googleapis.com/auth/firebase.messaging
-Tap Authorize API.
-Pick correct user for authorisation and allow access.
-In the Step 2: Exchange authorization code for tokens tap Exchange authorisation code for tokens.
-Access token is your Bearer.
+1. Go to [Google OAuth Playground](https://developers.google.com/oauthplayground).
+2. In the "Input your own scopes" field for FCM, use this URL: `https://www.googleapis.com/auth/firebase.messaging`.
+3. Tap **Authorize APIs**.
+4. Pick the correct user for authorization and allow access.
+5. In Step 2: Exchange authorization code for tokens, tap **Exchange authorization code for tokens**.
+6. The access token you receive is your Bearer.
 
